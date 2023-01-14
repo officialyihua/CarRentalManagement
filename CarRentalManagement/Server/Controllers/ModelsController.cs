@@ -31,8 +31,8 @@ namespace CarRentalManagement.Server.Controllers
         public async Task<IActionResult> GetModels()
         {
             //return await _context.Models.ToListAsync();
-            var makes = await _unitOfWork.Models.GetAll();
-            return Ok(makes);
+            var models = await _unitOfWork.Models.GetAll();
+            return Ok(models);
         }
 
         // GET: api/Models/5
@@ -40,30 +40,30 @@ namespace CarRentalManagement.Server.Controllers
         //public async Task<ActionResult<Model>> GetModel(int id)
         public async Task<IActionResult> GetModel(int id)
         {
-            //var make = await _context.Models.FindAsync(id);
-            var make = await _unitOfWork.Models.Get(q => q.Id == id);
+            //var model = await _context.Models.FindAsync(id);
+            var model = await _unitOfWork.Models.Get(q => q.Id == id);
 
-            if (make == null)
+            if (model == null)
             {
                 return NotFound();
             }
 
-            //return make;
-            return Ok(make);
+            //return model;
+            return Ok(model);
         }
 
         // PUT: api/Models/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutModel(int id, Model make)
+        public async Task<IActionResult> PutModel(int id, Model model)
         {
-            if (id != make.Id)
+            if (id != model.Id)
             {
                 return BadRequest();
             }
 
-            //_context.Entry(make).State = EntityState.Modified;
-            _unitOfWork.Models.Update(make);
+            //_context.Entry(model).State = EntityState.Modified;
+            _unitOfWork.Models.Update(model);
 
             try
             {
@@ -89,28 +89,28 @@ namespace CarRentalManagement.Server.Controllers
         // POST: api/Models
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Model>> PostModel(Model make)
+        public async Task<ActionResult<Model>> PostModel(Model model)
         {
-            //_context.Models.Add(make);
+            //_context.Models.Add(model);
             //await _context.SaveChangesAsync();
-            await _unitOfWork.Models.Insert(make);
+            await _unitOfWork.Models.Insert(model);
             await _unitOfWork.Save(HttpContext);
 
-            return CreatedAtAction("GetModel", new { id = make.Id }, make);
+            return CreatedAtAction("GetModel", new { id = model.Id }, model);
         }
 
         // DELETE: api/Models/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteModel(int id)
         {
-            //var make = await _context.Models.FindAsync(id);
-            var make = await _unitOfWork.Models.Get(q => q.Id == id);
-            if (make == null)
+            //var model = await _context.Models.FindAsync(id);
+            var model = await _unitOfWork.Models.Get(q => q.Id == id);
+            if (model == null)
             {
                 return NotFound();
             }
 
-            //_context.Models.Remove(make);
+            //_context.Models.Remove(model);
             //await _context.SaveChangesAsync();
             await _unitOfWork.Models.Delete(id);
             await _unitOfWork.Save(HttpContext);
@@ -122,8 +122,8 @@ namespace CarRentalManagement.Server.Controllers
         private async Task<bool> ModelExists(int id)
         {
             //return _context.Models.Any(e => e.Id == id);
-            var make = await _unitOfWork.Models.Get(q => q.Id == id);
-            return make != null;
+            var model = await _unitOfWork.Models.Get(q => q.Id == id);
+            return model != null;
         }
     }
 }

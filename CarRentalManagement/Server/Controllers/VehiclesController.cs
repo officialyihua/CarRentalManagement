@@ -31,8 +31,8 @@ namespace CarRentalManagement.Server.Controllers
         public async Task<IActionResult> GetVehicles()
         {
             //return await _context.Vehicles.ToListAsync();
-            var makes = await _unitOfWork.Vehicles.GetAll();
-            return Ok(makes);
+            var vehicles = await _unitOfWork.Vehicles.GetAll(includes: q => q.Include(x => x.Make).Include(x=>x.Model).Include(x=>x.Colour));
+            return Ok(vehicles);
         }
 
         // GET: api/Vehicles/5
@@ -40,30 +40,30 @@ namespace CarRentalManagement.Server.Controllers
         //public async Task<ActionResult<Vehicle>> GetVehicle(int id)
         public async Task<IActionResult> GetVehicle(int id)
         {
-            //var make = await _context.Vehicles.FindAsync(id);
-            var make = await _unitOfWork.Vehicles.Get(q => q.Id == id);
+            //var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle = await _unitOfWork.Vehicles.Get(q => q.Id == id);
 
-            if (make == null)
+            if (vehicle == null)
             {
                 return NotFound();
             }
 
-            //return make;
-            return Ok(make);
+            //return vehicle;
+            return Ok(vehicle);
         }
 
         // PUT: api/Vehicles/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVehicle(int id, Vehicle make)
+        public async Task<IActionResult> PutVehicle(int id, Vehicle vehicle)
         {
-            if (id != make.Id)
+            if (id != vehicle.Id)
             {
                 return BadRequest();
             }
 
-            //_context.Entry(make).State = EntityState.Modified;
-            _unitOfWork.Vehicles.Update(make);
+            //_context.Entry(vehicle).State = EntityState.Modified;
+            _unitOfWork.Vehicles.Update(vehicle);
 
             try
             {
@@ -89,28 +89,28 @@ namespace CarRentalManagement.Server.Controllers
         // POST: api/Vehicles
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Vehicle>> PostVehicle(Vehicle make)
+        public async Task<ActionResult<Vehicle>> PostVehicle(Vehicle vehicle)
         {
-            //_context.Vehicles.Add(make);
+            //_context.Vehicles.Add(vehicle);
             //await _context.SaveChangesAsync();
-            await _unitOfWork.Vehicles.Insert(make);
+            await _unitOfWork.Vehicles.Insert(vehicle);
             await _unitOfWork.Save(HttpContext);
 
-            return CreatedAtAction("GetVehicle", new { id = make.Id }, make);
+            return CreatedAtAction("GetVehicle", new { id = vehicle.Id }, vehicle);
         }
 
         // DELETE: api/Vehicles/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVehicle(int id)
         {
-            //var make = await _context.Vehicles.FindAsync(id);
-            var make = await _unitOfWork.Vehicles.Get(q => q.Id == id);
-            if (make == null)
+            //var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle = await _unitOfWork.Vehicles.Get(q => q.Id == id);
+            if (vehicle == null)
             {
                 return NotFound();
             }
 
-            //_context.Vehicles.Remove(make);
+            //_context.Vehicles.Remove(vehicle);
             //await _context.SaveChangesAsync();
             await _unitOfWork.Vehicles.Delete(id);
             await _unitOfWork.Save(HttpContext);
@@ -122,8 +122,8 @@ namespace CarRentalManagement.Server.Controllers
         private async Task<bool> VehicleExists(int id)
         {
             //return _context.Vehicles.Any(e => e.Id == id);
-            var make = await _unitOfWork.Vehicles.Get(q => q.Id == id);
-            return make != null;
+            var vehicle = await _unitOfWork.Vehicles.Get(q => q.Id == id);
+            return vehicle != null;
         }
     }
 }
